@@ -1,26 +1,30 @@
-# pause - ждём enter
-# start - вывод названия программы(берёться название исполняемого файла)
-# print - обычный вывод, как print() -> python
-# write - ввод без \n
-# logError - если ошибка случаеться, красный текст
-# findAnyFiles - поиск любой функций.
-import os
+import os, terminal, strutils
 
-proc createCustomError*(msg: string) =
-    raise newException(Exception, msg)
+proc logError*(msg: string, error = Exception) =
+    echo "[ERROR] ", msg
+    raise newException(error, msg)
 
-
-proc write*(args: string) =
-    stdout.write(args)
+proc write*(args: varargs[string]) =
+    for a in args:
+        stdout.write(a)
     stdout.flushFile()
 
-proc start*(symbol: string, name: string): string = 
-    if symbol >= 2:
-        createCustomError("Only one symbol!")
 
-    var full_text: string = "";
-    let height: int = name.len
-    for _ in height:
-        write(symbol)
-        
+proc start*(symbol: string = "*", name: string = "Example"): string =
+    if symbol.len != 1:
+        logError("Only one symbol", ValueError)
+    
+    var full_text = symbol.repeat(name.len) & "\n"
+    full_text &= name & "\n"
+    full_text &= symbol.repeat(name.len)
     return full_text
+
+proc pause*(lang: string="en", color: ForegroundColor) =
+    if lang.toLower() == "ru":
+        styledEcho(color, "Нажмите Enter...")
+    else: 
+        styledEcho(color, "Press Enter...")
+    discard stdin.readLine()
+
+
+write("Hui"); write("\n",start("*", "Nipi"), "\n"); pause("ru", fgRed); logError("Хуй")
