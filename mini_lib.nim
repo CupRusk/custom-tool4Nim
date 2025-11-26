@@ -22,6 +22,12 @@ proc print*(args: varargs[string]) =
     stdout.write("\n")
     stdout.flushFile()
 
+proc input*(args: varargs[string]): string = 
+    for a in args:
+        stdout.write(a)
+    var input = stdin.readLine();
+    return input
+    
 proc title*(symbol: char = '*', name: string = "Example"): string =
     var line = repeat(symbol, name.len)
     return line & "\n" & name & "\n" & line
@@ -33,12 +39,12 @@ proc pause*(lang: string = "en", color: ForegroundColor = fgWhite) =
     of "du": styledEcho(color, "Drücken Sie die Enter...")
     else:    styledEcho(color, "Press Enter...")
     discard stdin.readLine()
+
 type AnswerMode* = enum # работает в связке с proc answer, хотел сделать на int 
 # но сделал свой типы, буду чаще это использовать, в питоне так нельзя было.
     amStrict
     amLoose
     amExtended
-
 proc answer*(question: string = "Continue? (y/n): ",mode: AnswerMode = amStrict): bool =
     stdout.write(question)
     stdout.flushFile()
