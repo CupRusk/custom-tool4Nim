@@ -11,9 +11,9 @@ proc logWarn*(msg: string="500") =
 proc logInfo*(msg: string="500") = 
     echo("[INFO]" & msg)
 
-proc write*(args: varargs[string]) =
+proc write*(args: varargs[string, `$`]) =
     for a in args:
-        stdout.write(a)
+        stdout.write($a)
     stdout.flushFile()
 
 proc print*(args: varargs[string]) =
